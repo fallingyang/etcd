@@ -249,19 +249,19 @@ func (c *Config) validate() error {
 }
 
 type raft struct {
-	id uint64
+	id uint64 // 当前节点在集群中的ID
 
-	Term uint64
-	Vote uint64
+	Term uint64 // 当前任期号
+	Vote uint64 // 当前任期中当前节点将选票投给了哪个节点
 
-	readStates []ReadState
+	readStates []ReadState // TODO 与只读请求有关
 
 	// the log
-	raftLog *raftLog
+	raftLog *raftLog // 本地log，涉及缓存
 
-	maxMsgSize         uint64
-	maxUncommittedSize uint64
-	maxInflight        int
+	maxMsgSize         uint64 // 单条消息的最大字节数
+	maxUncommittedSize uint64 // 最大的未提交消息数
+	maxInflight        int // 对于当前节点，已经发送出去但未收到响应的消息个数，如果达到上线，暂停当前节点的消息发送，与上一个属性一起实现限流的功能
 	prs                map[uint64]*Progress
 	learnerPrs         map[uint64]*Progress
 	matchBuf           uint64Slice
